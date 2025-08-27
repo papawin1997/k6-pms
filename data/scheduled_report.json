@@ -1,0 +1,9 @@
+{
+  "userID": 90003020,
+  "goalPlanID": 4,
+  "filter": "{\"assessorRole\":\"\",\"languageID\":1,\"offset\":0,\"limit\":0,\"searchText\":\"\",\"goalPlanID\":4,\"Pgbu\":\"\",\"PgbuGroup\":\"\",\"SubPgbu\":\"\"}",
+  "reportID": 0,
+  "fileID": 0,
+  "reportCode": "Performance Score Detail",
+  "scheduledType": "insert"
+}
