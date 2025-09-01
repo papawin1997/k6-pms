@@ -1,0 +1,18 @@
+{
+  "currentStep":1,
+  "nextStep":2,
+  "pmFormList":[
+    {
+      "pmFormID":94623,
+      "userID":90003020
+    },
+    {
+      "pmFormID":94624,
+      "userID":90003021
+    }
+  ],
+  "goalPlanID":4,
+  "period":"Year-End",
+  "fiscalYear":2025,
+  "isSendEmail":true
+}

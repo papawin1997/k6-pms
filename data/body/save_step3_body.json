@@ -1,0 +1,295 @@
+{
+  "pmForm": {
+    "pmFormID": 94626,
+    "currentStep": 3,
+    "userID": "90003023",
+    "managerID": "90003123",
+    "momID": "90003223",
+    "hcbpID": "90003323",
+    "sharedKPIRating": 0,
+    "sharedKPIScore": 0,
+    "sharedKpiWeight": 0,
+    "buKPIRating": 5,
+    "buKPIScore": 0.75,
+    "buKPIWeight": 15,
+    "indiKPIRating": 5,
+    "indiKPIScore": 4,
+    "indiKPIWeight": 80,
+    "globalKPIRating": 5,
+    "globalKPIScore": 0.25,
+    "globalKPIWeight": 5,
+    "managerIndividualKPI": 5,
+    "managerCalculatedRating": 0,
+    "managerOverallScore": 0,
+    "overallRating": 5,
+    "calculatedRating": 5,
+    "overallScore": 100,
+    "reviewerIndividualKPI": 5,
+    "finalScore": 100,
+    "formStatus": "In Progress",
+    "fiscalYear": 2025,
+    "recalculateScoreID": 0,
+    "goalFormID": 0,
+    "pmFormSteps": [
+      {
+        "pmFormStepID": 148446,
+        "pmFormID": 94626,
+        "userID": "90003023",
+        "stepNumber": 3,
+        "assessorRole": "Reviewer",
+        "assessorRoleName": "",
+        "assessorID": "90003223",
+        "sharedKPIRating": 0,
+        "sharedKPIScore": 0,
+        "sharedKPIWeight": 0,
+        "buKPIRating": 5,
+        "buKPIScore": 0.75,
+        "buKPIWeight": 15,
+        "indiKPIRating": 5,
+        "indiKPIScore": 4,
+        "indiKPIRatingOnlyManager": 0,
+        "indiKPIScoreOnlyManager": 0,
+        "indiKPIWeight": 80,
+        "globalKPIRating": 5,
+        "globalKPIScore": 0.25,
+        "globalKPIWeight": 5,
+        "overallRating": 5,
+        "calculatedRating": 5,
+        "overallScore": 100,
+        "formStepStatus": "In Progress",
+        "pmFormAssessments": [
+          {
+            "pmFormAssessmentID": 2000418,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 263,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000417,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 264,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000416,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 265,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000415,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 266,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000414,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 267,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000413,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 268,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000412,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 269,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000411,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 270,
+            "rating": 5,
+            "comment": ""
+          },
+          {
+            "pmFormAssessmentID": 2000410,
+            "pmFormStepID": 148446,
+            "assessmentItemID": 271,
+            "rating": 5,
+            "comment": ""
+          }
+        ],
+        "activeFlag": true,
+        "comment": ""
+      }
+    ]
+  },
+  "pmFormAssessment": [
+    {
+      "pmFormAssessmentID": 2000418,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 263,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000417,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 264,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000416,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 265,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000415,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 266,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000414,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 267,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000413,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 268,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000412,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 269,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000411,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 270,
+      "rating": 5,
+      "comment": ""
+    },
+    {
+      "pmFormAssessmentID": 2000410,
+      "pmFormStepID": 148446,
+      "assessmentItemID": 271,
+      "rating": 5,
+      "comment": ""
+    }
+  ],
+  "pmFormStep": [
+    {
+      "pmFormStepID": 148446,
+      "pmFormID": 94626,
+      "userID": "90003023",
+      "stepNumber": 3,
+      "assessorRole": "Reviewer",
+      "assessorRoleName": "",
+      "assessorID": "90003223",
+      "sharedKPIRating": 0,
+      "sharedKPIScore": 0,
+      "sharedKPIWeight": 0,
+      "buKPIRating": 5,
+      "buKPIScore": 0.75,
+      "buKPIWeight": 15,
+      "indiKPIRating": 5,
+      "indiKPIScore": 4,
+      "indiKPIRatingOnlyManager": 0,
+      "indiKPIScoreOnlyManager": 0,
+      "indiKPIWeight": 80,
+      "globalKPIRating": 5,
+      "globalKPIScore": 0.25,
+      "globalKPIWeight": 5,
+      "overallRating": 5,
+      "calculatedRating": 5,
+      "overallScore": 100,
+      "formStepStatus": "In Progress",
+      "pmFormAssessments": [
+        {
+          "pmFormAssessmentID": 2000418,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 263,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000417,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 264,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000416,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 265,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000415,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 266,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000414,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 267,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000413,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 268,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000412,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 269,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000411,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 270,
+          "rating": 5,
+          "comment": ""
+        },
+        {
+          "pmFormAssessmentID": 2000410,
+          "pmFormStepID": 148446,
+          "assessmentItemID": 271,
+          "rating": 5,
+          "comment": ""
+        }
+      ],
+      "activeFlag": true,
+      "comment": ""
+    }
+  ],
+  "isSubmit": false,
+  "fiscalYear": 2025,
+  "attachment": [],
+  "isMatrixSubmit": false
+}
