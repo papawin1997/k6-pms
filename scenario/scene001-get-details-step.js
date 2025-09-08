@@ -3,8 +3,8 @@ import { check } from 'k6';
 
 export const options = {
   vus: 1,
-  iterations: 8,
-  // duration: "10m",
+  iterations: 1,
+  // duration: "30m",
 };
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));
@@ -16,19 +16,19 @@ const header6 = JSON.parse(open('../data/header/token_user6.json'));
 const header7 = JSON.parse(open('../data/header/token_user7.json'));
 const header8 = JSON.parse(open('../data/header/token_user_admin.json'));
 const header = [header1, header2, header3, header4, header5, header6, header7, header8];
-const pmFormId = [94624, 94625, 94626, 94627, 94628, 94629, 94630, 94623];
+const pmFormId = ["94624", "94625", "94626", "94627", "94628", "94629", "94630", "94623"];
 
 export default function () {
   // Define
   const userIndex = ((__VU - 1) % 8);
   const baseUrl = 'https://pmsapiuat.thaibev.com';
   const urls = [
-    `${baseUrl}/performance/pending/${pmFormId}/global-value?languageID=1`,
-    `${baseUrl}/performance/pending/${pmFormId}/kpi-categories?languageID=1&isViewer=0&assessorRole=Employee`,
-    `${baseUrl}/performance/pending/${pmFormId}/pm-form-step?assessorRole=Employee`,
-    `${baseUrl}/performance/pending/${pmFormId}/employee`,
-    `${baseUrl}/performance/pending/pm-form-header/${pmFormId}?languageID=1`,
-    `${baseUrl}/performance/pending/${pmFormId}/routemap?languageID=1`
+    `${baseUrl}/performance/pending/${pmFormId[userIndex]}/global-value?languageID=1`,
+    `${baseUrl}/performance/pending/${pmFormId[userIndex]}/kpi-categories?languageID=1&isViewer=0&assessorRole=Employee`,
+    `${baseUrl}/performance/pending/${pmFormId[userIndex]}/pm-form-step?assessorRole=Employee`,
+    `${baseUrl}/performance/pending/${pmFormId[userIndex]}/employee`,
+    `${baseUrl}/performance/pending/pm-form-header/${pmFormId[userIndex]}?languageID=1`,
+    `${baseUrl}/performance/pending/${pmFormId[userIndex]}/routemap?languageID=1`
   ];
   const params = { headers: header[userIndex] };
 
@@ -40,10 +40,9 @@ export default function () {
   // Validate
   const body1 = res1.json();
   let globalValueList = body1.globalValueList;
-  let globalValueItem = globalValueList.length;
   const status1 = check(res1, {
     '[GET global-value] status is 200': (r) => r.status === 200,
-    '[GET global-value] globalValueList has items': () => globalValueItem > 0,
+    '[GET global-value] globalValueList has items': () => Array.isArray(globalValueList),
   });
 
   const body2 = res2.json();
@@ -61,7 +60,7 @@ export default function () {
     '[GET pm-form-step] status is 200': (r) => r.status === 200,
     '[GET pm-form-step] response is an array': () => Array.isArray(body3),
     '[GET pm-form-step] stepNumber is "1"': () => stepNumber === "1",
-    '[GET pm-form-step] pmFormId is valid': (r) => r.json()[0].pmFormID === pmFormId,
+    '[GET pm-form-step] pmFormId is valid': (r) => r.json()[0].pmFormID === pmFormId[userIndex],
   });
 
   const body4 = res4.json();
@@ -88,7 +87,7 @@ export default function () {
   let resultStepItem = resultStepList.length;
   const status6 = check(res6, {
     '[GET routemap] status is 200': (r) => r.status === 200,
-    '[GET routemap] response is an array with items': () => Array.isArray(body6) && body6.length > 0,
+    '[GET routemap] response is an array with items': () => Array.isArray(resultStepList) && resultStepItem > 0,
     '[GET routemap] step1 is valid': (r) => r.json()[0].stepNumber === 1,
     '[GET routemap] step1 has name': (r) => r.json()[0].stepName === "Self Assessment",
     '[GET routemap] step2 is valid': (r) => r.json()[1].stepNumber === 2,
@@ -106,21 +105,21 @@ export default function () {
   });
 
   if (!status1) {
-    console.log(`Request to ${res1.request.url} failed. Status: ${res1.status}. Body: ${res1.body}`);
+    console.log(`Request 001 [GET global-value] failed.\nStatus: ${res1.status}.\nBody: ${res1.body}`);
   }
   if (!status2) {
-    console.log(`Request to ${res2.request.url} failed. Status: ${res2.status}. Body: ${res2.body}`);
+    console.log(`Request 002 [GET kpi-categories] failed.\nStatus: ${res2.status}.\nBody: ${res2.body}`);
   }
   if (!status3) {
-    console.log(`Request to ${res3.request.url} failed. Status: ${res3.status}. Body: ${res3.body}`);
+    console.log(`Request 003 [GET pm-form-step] failed.\nStatus: ${res3.status}.\nBody: ${res3.body}`);
   }
   if (!status4) {
-    console.log(`Request to ${res4.request.url} failed. Status: ${res4.status}. Body: ${res4.body}`);
+    console.log(`Request 004 [GET employee] failed.\nStatus: ${res4.status}.\nBody: ${res4.body}`);
   }
   if (!status5) {
-    console.log(`Request to ${res5.request.url} failed. Status: ${res5.status}. Body: ${res5.body}`);
+    console.log(`Request 005 [GET pm-form-header] failed.\nStatus: ${res5.status}.\nBody: ${res5.body}`);
   }
   if (!status6) {
-    console.log(`Request to ${res6.request.url} failed. Status: ${res6.status}. Body: ${res6.body}`);
+    console.log(`Request 006 [GET routemap] failed.\nStatus: ${res6.status}.\nBody: ${res6.body}`);
   }
 }

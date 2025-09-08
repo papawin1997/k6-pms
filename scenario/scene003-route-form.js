@@ -2,8 +2,8 @@ import http from "k6/http";
 import { check } from "k6";
 
 export const options = {
-  vus: 4,
-  iterations: 4,
+  vus: 8,
+  iterations: 16,
   // duration: "5s",
 }
 
@@ -27,7 +27,6 @@ export default function () {
   const url = `${baseUrl}/admin/route-form`
   const params = { headers: header[userIndex] };
   bodySchema.pmFormID = pmFormId[userIndex];
-  console.log(bodySchema);
   const body = JSON.stringify(bodySchema);
 
   // Load Test
