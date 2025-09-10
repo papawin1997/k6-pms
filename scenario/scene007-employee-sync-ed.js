@@ -2,8 +2,9 @@ import http from "k6/http";
 import { check } from "k6";
 
 export const options = {
-  vus: 8,
-  iterations: 8,
+  vus: 1,
+  // iterations: 1,
+  duration: "10m",
 }
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));
@@ -33,7 +34,7 @@ export default function () {
   const message = bodyResponse.message;
   const status = check(response, {
     'status is 200': (r) => r.status === 200,
-    'message is valid': () => message === "job is running"
+    'message is valid': () => message === "success"
   });
 
   if (status == false) {

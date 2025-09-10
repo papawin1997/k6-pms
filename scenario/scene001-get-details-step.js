@@ -2,9 +2,9 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 export const options = {
-  vus: 1,
-  iterations: 1,
-  // duration: "30m",
+  vus: 300,
+  // iterations: 1,
+  duration: "30m",
 };
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));

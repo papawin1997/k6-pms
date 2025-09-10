@@ -3,8 +3,8 @@ import { check } from "k6";
 
 export const options = {
   vus: 8,
-  // iterations: 1,
-  duration: "5s",
+  // iterations: 8,
+  duration: "10m",
 }
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));

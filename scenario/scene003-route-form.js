@@ -3,8 +3,8 @@ import { check } from "k6";
 
 export const options = {
   vus: 8,
-  iterations: 16,
-  // duration: "5s",
+  // iterations: 16,
+  duration: "10m",
 }
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));
@@ -16,8 +16,15 @@ const header6 = JSON.parse(open('../data/header/token_user6.json'));
 const header7 = JSON.parse(open('../data/header/token_user7.json'));
 const header8 = JSON.parse(open('../data/header/token_user_admin.json'));
 const header = [header1, header2, header3, header4, header5, header6, header7, header8];
-const bodySchema = JSON.parse(open('../data/body/route_form_body.json'));
-const pmFormId = [94624, 94625, 94626, 94627, 94628, 94629, 94630, 94623];
+const body1 = JSON.parse(open('../data/body/route_form_body_94623.json'));
+const body2 = JSON.parse(open('../data/body/route_form_body_94624.json'));
+const body3 = JSON.parse(open('../data/body/route_form_body_94625.json'));
+const body4 = JSON.parse(open('../data/body/route_form_body_94627.json'));
+const body5 = JSON.parse(open('../data/body/route_form_body_94628.json'));
+const body6 = JSON.parse(open('../data/body/route_form_body_94629.json'));
+const body7 = JSON.parse(open('../data/body/route_form_body_94631.json'));
+const body8 = JSON.parse(open('../data/body/route_form_body_94632.json'));
+const bodySchema = [body1, body2, body3, body4, body5, body6, body7, body8];
 
 
 export default function () {
@@ -26,8 +33,7 @@ export default function () {
   const baseUrl = "https://pmsapiuat.thaibev.com";
   const url = `${baseUrl}/admin/route-form`
   const params = { headers: header[userIndex] };
-  bodySchema.pmFormID = pmFormId[userIndex];
-  const body = JSON.stringify(bodySchema);
+  const body = JSON.stringify(bodySchema[userIndex]);
 
   // Load Test
   const response = http.post(url, body, params);
@@ -39,8 +45,7 @@ export default function () {
   });
 
   if (status == false) {
-    const bodyString = JSON.stringify(bodyResponse);
-    console.log(`pmFormId ${pmFormId[userIndex]}: ${bodyString}`);
+    console.log(bodyResponse);
   }
 
   // restore

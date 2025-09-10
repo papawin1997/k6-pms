@@ -1,9 +1,10 @@
 import http from "k6/http";
-import { check, sleep } from "k6";
+import { check } from "k6";
 
 export const options = {
-  vus: 2,
-  iterations: 2,
+  vus: 8,
+  // iterations: 8,
+  duration: "10m",
 }
 
 const header1 = JSON.parse(open('../data/header/token_user1.json'));
@@ -21,7 +22,7 @@ export default function () {
   // Define
   const userIndex = ((__VU - 1) % 8);
   const baseUrl = "https://pmsapiuat.thaibev.com";
-  const url = `${baseUrl}/admin/import-shared-score`;
+  const url = `${baseUrl}/admin/recalculate/create-task`;
   const params = { headers: header[userIndex] };
   const body = JSON.stringify(bodySchema);
 
@@ -30,16 +31,12 @@ export default function () {
   const bodyResponse = response.json();
 
   // Validate
-  const message = bodyResponse.message;
   const status = check(response, {
-    'status is 200': (r) => r.status === 200,
-    'message is valid': () => message === "Scores imported successfully"
+    'status is 200': (r) => r.status === 200
   });
 
   if (status == false) {
     const bodyString = JSON.stringify(bodyResponse);
     console.log(`header${userIndex+1}: ${bodyString}`);
   }
-
-  // sleep(1);
 }
