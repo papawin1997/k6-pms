@@ -7,15 +7,16 @@ export const options = {
   duration: "10m",
 }
 
-const header1 = JSON.parse(open('../data/header/token_user1.json'));
-const header2 = JSON.parse(open('../data/header/token_user2.json'));
-const header3 = JSON.parse(open('../data/header/token_user3.json'));
-const header4 = JSON.parse(open('../data/header/token_user4.json'));
-const header5 = JSON.parse(open('../data/header/token_user5.json'));
-const header6 = JSON.parse(open('../data/header/token_user6.json'));
-const header7 = JSON.parse(open('../data/header/token_user7.json'));
-const header8 = JSON.parse(open('../data/header/token_user_admin.json'));
-const header = [header1, header2, header3, header4, header5, header6, header7, header8];
+const header = JSON.parse(open('../data/header/header.json'));
+const header1 = header["user1"]
+const header2 = header["user2"]
+const header3 = header["user3"]
+const header4 = header["user4"]
+const header5 = header["user5"]
+const header6 = header["user6"]
+const header7 = header["user7"]
+const headerAdmin = header["admin"]
+const headers = [header1, header2, header3, header4, header5, header6, header7, headerAdmin];
 const bodySchema1 = JSON.parse(open('../data/body/submit_step1_body.json'));
 const bodySchema2 = JSON.parse(open('../data/body/submit_step2_body.json'));
 const bodySchema3 = JSON.parse(open('../data/body/submit_step3_body.json'));
@@ -25,13 +26,15 @@ const bodySchema6 = JSON.parse(open('../data/body/submit_step6_body.json'));
 const bodySchema7 = JSON.parse(open('../data/body/save_step1_body.json'));
 const bodySchema8 = JSON.parse(open('../data/body/save_step2_body.json'));
 const bodySchema = [bodySchema1, bodySchema2, bodySchema3, bodySchema4, bodySchema5, bodySchema6, bodySchema7, bodySchema8];
+const pmFormIDs =  ["94624", "94625", "94626", "94627", "94628", "94629", "94630", "94623"];
+const stepNumbers = [1,2,3,4,5,6,1]
 
 export default function () {
   // Define
   const userIndex = ((__VU - 1) % 8);
   const baseUrl = "https://pmsapiuat.thaibev.com";
   const url = `${baseUrl}/performance/submit-pm-form`;
-  const params = { headers: header[userIndex] };
+  const params = { headers: headers[userIndex] };
   const body = JSON.stringify(bodySchema[userIndex]);
 
   // Load Test
@@ -49,12 +52,12 @@ export default function () {
   }
 
   // restore
-  restorePerformance(baseUrl, header[userIndex]);
+  restorePerformance(baseUrl, header[userIndex],userIndex);
 }
 
 
-function restorePerformance(baseUrl, header) {
-  const url = `${baseUrl}/admin/restore-performance`;
+function restorePerformance(baseUrl, header,userIndex) {
+  const url = `${baseUrl}/admin/restore-performance?pmFormID=${pmFormIDs[userIndex]}&stepNumber=${stepNumbers[userIndex]}`;
   const params = { headers: header };
   http.post(url, null, params);
 }

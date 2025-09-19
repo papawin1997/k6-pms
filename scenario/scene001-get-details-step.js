@@ -2,20 +2,29 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 export const options = {
-  vus: 300,
+  vus: 100,
   // iterations: 1,
-  duration: "30m",
+  duration: "10m",
 };
+const header = JSON.parse(open('../data/header/header.json'));
+const header1 = header["user1"]
+const header2 = header["user2"]
+const header3 = header["user3"]
+const header4 = header["user4"]
+const header5 = header["user5"]
+const header6 = header["user6"]
+const header7 = header["user7"]
+const headerAdmin = header["admin"]
 
-const header1 = JSON.parse(open('../data/header/token_user1.json'));
-const header2 = JSON.parse(open('../data/header/token_user2.json'));
-const header3 = JSON.parse(open('../data/header/token_user3.json'));
-const header4 = JSON.parse(open('../data/header/token_user4.json'));
-const header5 = JSON.parse(open('../data/header/token_user5.json'));
-const header6 = JSON.parse(open('../data/header/token_user6.json'));
-const header7 = JSON.parse(open('../data/header/token_user7.json'));
-const header8 = JSON.parse(open('../data/header/token_user_admin.json'));
-const header = [header1, header2, header3, header4, header5, header6, header7, header8];
+// const header1 = JSON.parse(open('../data/header/token_user1.json'));
+// const header2 = JSON.parse(open('../data/header/token_user2.json'));
+// const header3 = JSON.parse(open('../data/header/token_user3.json'));
+// const header4 = JSON.parse(open('../data/header/token_user4.json'));
+// const header5 = JSON.parse(open('../data/header/token_user5.json'));
+// const header6 = JSON.parse(open('../data/header/token_user6.json'));
+// const header7 = JSON.parse(open('../data/header/token_user7.json'));
+// const header8 = JSON.parse(open('../data/header/token_user_admin.json'));
+const headers = [header1, header2, header3, header4, header5, header6, header7, headerAdmin];
 const pmFormId = ["94624", "94625", "94626", "94627", "94628", "94629", "94630", "94623"];
 
 export default function () {
@@ -30,7 +39,7 @@ export default function () {
     `${baseUrl}/performance/pending/pm-form-header/${pmFormId[userIndex]}?languageID=1`,
     `${baseUrl}/performance/pending/${pmFormId[userIndex]}/routemap?languageID=1`
   ];
-  const params = { headers: header[userIndex] };
+  const params = { headers: headers[userIndex] };
 
   // Load Test
   const batchRequests = urls.map(url => ['GET', url, null, params]);
