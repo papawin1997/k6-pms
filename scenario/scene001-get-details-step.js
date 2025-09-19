@@ -2,9 +2,9 @@ import http from 'k6/http';
 import { check } from 'k6';
 
 export const options = {
-  vus: 100,
+  vus: 300,
   // iterations: 1,
-  duration: "10m",
+  duration: "30m",
 };
 const header = JSON.parse(open('../data/header/header.json'));
 const header1 = header["user1"]

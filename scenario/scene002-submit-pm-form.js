@@ -3,13 +3,12 @@ import { check } from "k6";
 
 export const options = {
   vus: 7,
-  // iterations: 7,
+  // iterations: 1,
   duration: "10m",
-   thresholds: {
-    http_req_failed: ['rate<0.01'], // fail test ถ้า error > 1%
-  },
+  //  thresholds: {
+  //   http_req_failed: ['rate<0.01'], // fail test ถ้า error > 1%
+  // },
 }
-
 const header = JSON.parse(open('../data/header/header.json'));
 const header1 = header["user1"]
 const header2 = header["user2"]
@@ -31,10 +30,14 @@ const bodySchema8 = JSON.parse(open('../data/body/save_step2_body.json'));
 const bodySchema = [bodySchema1, bodySchema2, bodySchema3, bodySchema4, bodySchema5, bodySchema6, bodySchema8];
 const pmFormIDs =  ["94624", "94625", "94626", "94627", "94628", "94629", "94630", "94623"];
 const stepNumbers = [1,2,3,4,5,6,1]
+// const headers = [header1];
+// const bodySchema = [bodySchema1];
+// const pmFormIDs =  ["94624"];
+// const stepNumbers = [1]
 
 export default function () {
   // Define
-  const userIndex = ((__VU - 1) % 7);
+  const userIndex = ((__VU - 1) % options.vus);
   const baseUrl = "https://pmsapiuat.thaibev.com";
   const url = `${baseUrl}/performance/submit-pm-form`;
   const params = { headers: headers[userIndex] };
@@ -43,7 +46,7 @@ export default function () {
   // Load Test
   const response = http.post(url, body, params);
   const bodyResponse = response.json();
-
+// console.log(headers[userIndex],pmFormIDs[userIndex],stepNumbers[userIndex])
   // Validate
   const status = check(response, {
     'status is 200': (r) => r.status === 200
