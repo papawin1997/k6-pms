@@ -42,6 +42,9 @@ export default function () {
   const url = `${baseUrl}/performance/submit-pm-form`;
   const params = { headers: headers[userIndex] };
   const body = JSON.stringify(bodySchema[userIndex]);
+  
+  // restore
+  restorePerformance(baseUrl, headers[userIndex],userIndex);
 
   // Load Test
   const response = http.post(url, body, params);
@@ -57,8 +60,6 @@ export default function () {
     console.log(`Step${userIndex+1}: ${bodyString}`);
   }
 
-  // restore
-  restorePerformance(baseUrl, headers[userIndex],userIndex);
 }
 
 
