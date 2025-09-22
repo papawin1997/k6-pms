@@ -1,10 +1,13 @@
 import http from "k6/http";
 import { check } from "k6";
+import { abort } from "k6";
 
 export const options = {
   vus: 10,
   // iterations: 8,
   duration: "30m",
+  http_req_timeout: "120s",
+  port: 6565,
 };
 const header = JSON.parse(open("../data/header/header.json"));
 const headerAdmin = header["admin"];
@@ -76,8 +79,41 @@ export default function () {
   const responses = http.batch(batchRequests);
   const [res1, res2, res3, res4, res5, res6] = responses;
 
+  // Check HTTP status codes and stop execution if any request fails
+  const responses_to_check = [res1, res2, res3, res4, res5, res6];
+  const endpoint_names = [
+    "global-value",
+    "kpi-categories",
+    "pm-form-step",
+    "employee",
+    "pm-form-header",
+    "routemap",
+  ];
+
+  for (let i = 0; i < responses_to_check.length; i++) {
+    if (responses_to_check[i].status !== 200) {
+      console.log(
+        `❌ ERROR: ${endpoint_names[i]} API returned status ${responses_to_check[i].status} for userIndex ${userIndex}`
+      );
+      console.log(`Response body: ${responses_to_check[i].body}`);
+      console.log(`Stopping entire test execution due to API error.`);
+      abort();
+    }
+  }
+
   // Validate
-  const body1 = res1.json();
+  let body1;
+  try {
+    body1 = res1.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from global-value API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res1.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let globalValueList = body1.globalValueList;
   const status1 = check(res1, {
     "[GET global-value] status is 200": (r) => r.status === 200,
@@ -85,7 +121,26 @@ export default function () {
       Array.isArray(globalValueList),
   });
 
-  const body2 = res2.json();
+  if (!status1) {
+    console.log(
+      `❌ ERROR: Validation failed for global-value API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
+
+  let body2;
+  try {
+    body2 = res2.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from kpi-categories API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res2.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let kpiList = body2[0].kpi;
   let kpiItem = kpiList.length;
   const status2 = check(res2, {
@@ -94,7 +149,26 @@ export default function () {
     "[GET kpi-categories] kpi list has items": () => kpiItem > 0,
   });
 
-  const body3 = res3.json();
+  if (!status2) {
+    console.log(
+      `❌ ERROR: Validation failed for kpi-categories API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
+
+  let body3;
+  try {
+    body3 = res3.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from pm-form-step API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res3.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let stepNumber = body3[0].stepNumber;
   const status3 = check(res3, {
     "[GET pm-form-step] status is 200": (r) => r.status === 200,
@@ -104,7 +178,26 @@ export default function () {
       r.json()[0].pmFormID === pmFormId[userIndex]["form_id"],
   });
 
-  const body4 = res4.json();
+  if (!status3) {
+    console.log(
+      `❌ ERROR: Validation failed for pm-form-step API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
+
+  let body4;
+  try {
+    body4 = res4.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from employee API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res4.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let id4 = body4.ID;
   let employeeId = body4.employeeID;
   const status4 = check(res4, {
@@ -113,7 +206,26 @@ export default function () {
     "[GET employee] employeeID is not empty": () => employeeId !== "",
   });
 
-  const body5 = res5.json();
+  if (!status4) {
+    console.log(
+      `❌ ERROR: Validation failed for employee API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
+
+  let body5;
+  try {
+    body5 = res5.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from pm-form-header API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res5.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let id5 = body5.ID;
   let resultTemplateSection = body5.resultTemplateSection;
   let resultTemplateItem = resultTemplateSection.length;
@@ -124,7 +236,26 @@ export default function () {
       resultTemplateItem > 0,
   });
 
-  const body6 = res6.json();
+  if (!status5) {
+    console.log(
+      `❌ ERROR: Validation failed for pm-form-header API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
+
+  let body6;
+  try {
+    body6 = res6.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from routemap API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res6.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
+
   let resultStepList = body6;
   let resultStepItem = resultStepList.length;
   const status6 = check(res6, {
@@ -153,35 +284,4 @@ export default function () {
     "[GET routemap] step7 has name": (r) =>
       r.json()[6].stepName === "Completed",
   });
-
-  if (!status1) {
-    console.log(
-      `Request 001 [GET global-value] failed.\nStatus: ${res1.status}.\nBody: ${res1.body}`
-    );
-  }
-  if (!status2) {
-    console.log(
-      `Request 002 [GET kpi-categories] failed.\nStatus: ${res2.status}.\nBody: ${res2.body}`
-    );
-  }
-  if (!status3) {
-    console.log(
-      `Request 003 [GET pm-form-step] failed.\nStatus: ${res3.status}.\nBody: ${res3.body}`
-    );
-  }
-  if (!status4) {
-    console.log(
-      `Request 004 [GET employee] failed.\nStatus: ${res4.status}.\nBody: ${res4.body}`
-    );
-  }
-  if (!status5) {
-    console.log(
-      `Request 005 [GET pm-form-header] failed.\nStatus: ${res5.status}.\nBody: ${res5.body}`
-    );
-  }
-  if (!status6) {
-    console.log(
-      `Request 006 [GET routemap] failed.\nStatus: ${res6.status}.\nBody: ${res6.body}`
-    );
-  }
 }
