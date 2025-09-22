@@ -71,6 +71,7 @@ export default function () {
   headerAdmin["x-client-proxy-id"] = userID;
   const params = {
     headers: headerAdmin,
+    timeout: "300s",
   };
 
   // Load Test
