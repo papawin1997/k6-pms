@@ -1,6 +1,5 @@
 import http from "k6/http";
 import { check } from "k6";
-import { sleep } from "k6";
 import { abort } from "k6";
 import { Counter, Rate } from "k6/metrics";
 
@@ -22,25 +21,15 @@ export const options = {
   port: 6567,
 };
 
-// Load headers
-const header = JSON.parse(open("../data/header/header.json"));
-const header1 = header["user1"];
-const header2 = header["user2"];
-const header3 = header["user3"];
-const header4 = header["user4"];
-const header5 = header["user5"];
-const header6 = header["user6"];
-const headerAdmin = header["admin"];
+// Load headers from individual token files
+const header1 = JSON.parse(open("../data/header/token_user1.json"));
+const header2 = JSON.parse(open("../data/header/token_user2.json"));
+const header3 = JSON.parse(open("../data/header/token_user3.json"));
+const header4 = JSON.parse(open("../data/header/token_user4.json"));
+const header5 = JSON.parse(open("../data/header/token_user5.json"));
+const header6 = JSON.parse(open("../data/header/token_user6.json"));
 
-const headers = [
-  header1,
-  header2,
-  header3,
-  header4,
-  header5,
-  header6,
-  headerAdmin,
-];
+const headers = [header1, header2, header3, header4, header5, header6];
 
 // Load submit body schemas
 const bodySchema1 = JSON.parse(open("../data/body/submit_step1_body.json"));
@@ -49,7 +38,6 @@ const bodySchema3 = JSON.parse(open("../data/body/submit_step3_body.json"));
 const bodySchema4 = JSON.parse(open("../data/body/submit_step4_body.json"));
 const bodySchema5 = JSON.parse(open("../data/body/submit_step5_body.json"));
 const bodySchema6 = JSON.parse(open("../data/body/submit_step6_body.json"));
-const bodySchema8 = JSON.parse(open("../data/body/save_step2_body.json"));
 
 const bodySchema = [
   bodySchema1,
@@ -58,22 +46,12 @@ const bodySchema = [
   bodySchema4,
   bodySchema5,
   bodySchema6,
-  bodySchema8,
 ];
 
 // PM Form IDs (same as scene 1 and 2)
-const pmFormId = [
-  "94624",
-  "94625",
-  "94626",
-  "94627",
-  "94628",
-  "94629",
-  "94630",
-  "94623",
-];
+const pmFormId = ["94624", "94625", "94626", "94627", "94628", "94629"];
 
-const stepNumbers = [1, 2, 3, 4, 5, 6, 7];
+const stepNumbers = [1, 2, 3, 4, 5, 6];
 
 export default function () {
   // Define
@@ -210,14 +188,11 @@ export default function () {
   const submitParams = { headers: headers[userIndex] };
   const submitBody = JSON.stringify(bodySchema[userIndex]);
 
-  // Load Test - Submit Form
   const submitResponse = http.post(submitUrl, submitBody, submitParams);
 
-  // Count SUBMIT operation
   submitFormCounter.add(1);
   submitFormRate.add(1); // Mark as successful
 
-  // Check HTTP status code for submit request
   if (submitResponse.status !== 200) {
     console.log(
       `❌ ERROR: submit-pm-form API returned status ${
@@ -229,7 +204,6 @@ export default function () {
     abort();
   }
 
-  // Parse JSON response for submit
   let submitBodyResponse;
   try {
     submitBodyResponse = submitResponse.json();
@@ -244,7 +218,6 @@ export default function () {
     abort();
   }
 
-  // Validate submit response
   const submitValidationStatus = check(submitResponse, {
     "[SUBMIT] status is 200": (r) => r.status === 200,
   });
@@ -267,11 +240,9 @@ function restorePerformance(baseUrl, header, userIndex) {
   const params = { headers: header };
   const response = http.post(url, null, params);
 
-  // Count RESTORE PERFORMANCE operation
   restorePerformanceCounter.add(1);
-  restorePerformanceRate.add(1); // Mark as successful
+  restorePerformanceRate.add(1);
 
-  // Check HTTP status code and stop execution if request fails
   if (response.status !== 200) {
     console.log(
       `❌ ERROR: restore-performance API returned status ${
@@ -283,7 +254,6 @@ function restorePerformance(baseUrl, header, userIndex) {
     abort();
   }
 
-  // Parse JSON response with error handling
   let bodyResponse;
   try {
     bodyResponse = response.json();
@@ -298,7 +268,6 @@ function restorePerformance(baseUrl, header, userIndex) {
     abort();
   }
 
-  // Validate
   const status = check(response, {
     "status is 200": (r) => r.status === 200,
   });
@@ -320,21 +289,17 @@ function restorePerformance(baseUrl, header, userIndex) {
   return true;
 }
 
-// Summary function to display results at the end
 export function handleSummary(data) {
-  // Try Counter metrics first (they might have 'values' property)
   const getDetailsCount = data.metrics.get_details_count?.values?.count || 0;
   const submitFormCount = data.metrics.submit_form_count?.values?.count || 0;
   const restorePerformanceCount =
     data.metrics.restore_performance_count?.values?.count || 0;
 
-  // Try Rate metrics as alternative (they have 'passes' property)
   const getDetailsRateCount = data.metrics.get_details_rate?.passes || 0;
   const submitFormRateCount = data.metrics.submit_form_rate?.passes || 0;
   const restorePerformanceRateCount =
     data.metrics.restore_performance_rate?.passes || 0;
 
-  // Use Counter if available, otherwise use Rate
   const finalGetDetailsCount =
     getDetailsCount > 0 ? getDetailsCount : getDetailsRateCount;
   const finalSubmitFormCount =
