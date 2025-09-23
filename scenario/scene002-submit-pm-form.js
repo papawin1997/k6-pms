@@ -4,9 +4,9 @@ import { sleep } from "k6";
 import { abort } from "k6";
 
 export const options = {
-  vus: 7,
-  // iterations: 1,
-  duration: "10m",
+  vus: 6,
+  iterations: 6,
+  // duration: "10m",
   //  thresholds: {
   //   http_req_failed: ['rate<0.01'], // fail test ถ้า error > 1%
   // },
@@ -22,7 +22,7 @@ const header4 = header["user4"];
 const header5 = header["user5"];
 const header6 = header["user6"];
 // const header7 = header["user7"]
-const headerAdmin = header["admin"];
+// const headerAdmin = header["admin"];
 const headers = [
   header1,
   header2,
@@ -30,7 +30,7 @@ const headers = [
   header4,
   header5,
   header6,
-  headerAdmin,
+  // headerAdmin,
 ];
 const bodySchema1 = JSON.parse(open("../data/body/submit_step1_body.json"));
 const bodySchema2 = JSON.parse(open("../data/body/submit_step2_body.json"));
@@ -39,7 +39,7 @@ const bodySchema4 = JSON.parse(open("../data/body/submit_step4_body.json"));
 const bodySchema5 = JSON.parse(open("../data/body/submit_step5_body.json"));
 const bodySchema6 = JSON.parse(open("../data/body/submit_step6_body.json"));
 // const bodySchema7 = JSON.parse(open('../data/body/save_step1_body.json'));
-const bodySchema8 = JSON.parse(open("../data/body/save_step2_body.json"));
+// const bodySchema8 = JSON.parse(open("../data/body/save_step2_body.json"));
 const bodySchema = [
   bodySchema1,
   bodySchema2,
@@ -47,7 +47,7 @@ const bodySchema = [
   bodySchema4,
   bodySchema5,
   bodySchema6,
-  bodySchema8,
+  // bodySchema8,
 ];
 const pmFormIDs = [
   "94624",
@@ -56,10 +56,10 @@ const pmFormIDs = [
   "94627",
   "94628",
   "94629",
-  "94630",
-  "94623",
+  // "94630",
+  // "94623",
 ];
-const stepNumbers = [1, 2, 3, 4, 5, 6, 7];
+const stepNumbers = [1, 2, 3, 4, 5, 6];
 // const headers = [header1];
 // const bodySchema = [bodySchema1];
 // const pmFormIDs =  ["94624"];
