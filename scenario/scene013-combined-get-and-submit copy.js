@@ -29,6 +29,7 @@ const header3 = header["user3"];
 const header4 = header["user4"];
 const header5 = header["user5"];
 const header6 = header["user6"];
+const headerAdmin = header["admin"];
 
 const headers = [
   header1,
@@ -37,6 +38,7 @@ const headers = [
   header4,
   header5,
   header6,
+  headerAdmin,
 ];
 
 // Load submit body schemas
@@ -46,6 +48,7 @@ const bodySchema3 = JSON.parse(open("../data/body/submit_step3_body.json"));
 const bodySchema4 = JSON.parse(open("../data/body/submit_step4_body.json"));
 const bodySchema5 = JSON.parse(open("../data/body/submit_step5_body.json"));
 const bodySchema6 = JSON.parse(open("../data/body/submit_step6_body.json"));
+const bodySchema8 = JSON.parse(open("../data/body/save_step2_body.json"));
 
 const bodySchema = [
   bodySchema1,
@@ -54,6 +57,7 @@ const bodySchema = [
   bodySchema4,
   bodySchema5,
   bodySchema6,
+  bodySchema8,
 ];
 
 const pmFormId = [
@@ -63,6 +67,8 @@ const pmFormId = [
   "94627",
   "94628",
   "94629",
+  "94630",
+  "94623",
 ];
 
 const stepNumbers = [1, 2, 3, 4, 5, 6, 7];
@@ -82,10 +88,7 @@ export default function () {
     `${baseUrl}/performance/pending/pm-form-header/${pmFormId[userIndex]}?languageID=1`,
     `${baseUrl}/performance/pending/${pmFormId[userIndex]}/routemap?languageID=1`,
   ];
-  const params = {
-    headers: headers[userIndex],
-    timeout: "300s", // 5 minutes timeout
-  };
+  const params = { headers: headers[userIndex] };
 
   // Load Test - Get Details
   const batchRequests = urls.map((url) => ["GET", url, null, params]);
@@ -109,17 +112,13 @@ export default function () {
 
   for (let i = 0; i < responses_to_check.length; i++) {
     if (responses_to_check[i].status !== 200) {
-      console.log(`❌ GET API ERROR - ${endpoint_names[i].toUpperCase()}`);
       console.log(
-        `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${
-          userIndex + 1
-        })`
+        `❌ ERROR: ${endpoint_names[i]} API returned status ${
+          responses_to_check[i].status
+        } for userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
       );
-      console.log(`📡 Endpoint: ${endpoint_names[i]}`);
-      console.log(`📊 Status Code: ${responses_to_check[i].status}`);
-      console.log(`📄 Response Body: ${responses_to_check[i].body}`);
-      console.log(`🛑 Stopping entire test execution due to API error.`);
-      console.log("=".repeat(80) + "\n");
+      console.log(`Response body: ${responses_to_check[i].body}`);
+      console.log(`Stopping entire test execution due to API error.`);
       abort();
     }
   }
@@ -135,14 +134,12 @@ export default function () {
     body5 = res5.json();
     body6 = res6.json();
   } catch (error) {
-    console.log(`❌ JSON PARSING ERROR - GET APIs`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Failed to parse JSON response from GET APIs for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Parse JSON response from GET APIs`);
-    console.log(`❌ Error: ${error.message}`);
-    console.log(`🛑 Stopping entire test execution due to JSON parsing error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
     abort();
   }
 
@@ -187,14 +184,12 @@ export default function () {
     });
 
   if (!getValidationStatus) {
-    console.log(`❌ VALIDATION ERROR - GET APIs`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Validation failed for GET APIs for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Validate GET API responses`);
-    console.log(`❌ Issue: One or more GET API validations failed`);
-    console.log(`🛑 Stopping entire test execution due to validation error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Stopping entire test execution due to validation error.`);
     abort();
   }
 
@@ -206,26 +201,21 @@ export default function () {
     userIndex
   );
   if (!restoreSuccess) {
-    console.log(`❌ RESTORE PERFORMANCE ERROR`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: restore-performance failed for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Restore Performance`);
-    console.log(`❌ Issue: restore-performance function returned false`);
     console.log(
-      `🛑 Stopping entire test execution due to restore-performance failure.`
+      `Stopping entire test execution due to restore-performance failure.`
     );
-    console.log("=".repeat(80) + "\n");
     abort();
   }
 
   // ===== PHASE 3: SUBMIT FORM (from scene 2) =====
 
   const submitUrl = `${baseUrl}/performance/submit-pm-form`;
-  const submitParams = {
-    headers: headers[userIndex],
-    timeout: "300s", // 5 minutes timeout
-  };
+  const submitParams = { headers: headers[userIndex] };
   const submitBody = JSON.stringify(bodySchema[userIndex]);
 
   // Load Test - Submit Form
@@ -237,15 +227,13 @@ export default function () {
 
   // Check HTTP status code for submit request
   if (submitResponse.status !== 200) {
-    console.log(`❌ SUBMIT API ERROR - SUBMIT PM FORM`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: submit-pm-form API returned status ${
+        submitResponse.status
+      } for userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
     );
-    console.log(`📡 Endpoint: submit-pm-form`);
-    console.log(`📊 Status Code: ${submitResponse.status}`);
-    console.log(`📄 Response Body: ${submitResponse.body}`);
-    console.log(`🛑 Stopping entire test execution due to API error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Response body: ${submitResponse.body}`);
+    console.log(`Stopping entire test execution due to API error.`);
     abort();
   }
 
@@ -254,15 +242,13 @@ export default function () {
   try {
     submitBodyResponse = submitResponse.json();
   } catch (error) {
-    console.log(`❌ JSON PARSING ERROR - SUBMIT PM FORM`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Failed to parse JSON response from submit-pm-form API for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Parse JSON response from submit-pm-form API`);
-    console.log(`❌ Error: ${error.message}`);
-    console.log(`📄 Response Body: ${submitResponse.body}`);
-    console.log(`🛑 Stopping entire test execution due to JSON parsing error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Response body: ${submitResponse.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
     abort();
   }
 
@@ -273,25 +259,20 @@ export default function () {
 
   if (!submitValidationStatus) {
     const bodyString = JSON.stringify(submitBodyResponse);
-    console.log(`❌ VALIDATION ERROR - SUBMIT PM FORM`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Validation failed for submit-pm-form API for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Validate submit-pm-form API response`);
-    console.log(`❌ Issue: Submit validation failed`);
-    console.log(`📄 Response Data: Step${userIndex + 1}: ${bodyString}`);
-    console.log(`🛑 Stopping entire test execution due to validation error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Step${userIndex + 1}: ${bodyString}`);
+    console.log(`Stopping entire test execution due to validation error.`);
     abort();
   }
 }
 
 function restorePerformance(baseUrl, header, userIndex) {
   const url = `${baseUrl}/admin/restore-performance?pmFormID=${pmFormId[userIndex]}&stepNumber=${stepNumbers[userIndex]}`;
-  const params = {
-    headers: header,
-    timeout: "300s", // 5 minutes timeout
-  };
+  const params = { headers: header };
   const response = http.post(url, null, params);
 
   // Count RESTORE PERFORMANCE operation
@@ -300,15 +281,13 @@ function restorePerformance(baseUrl, header, userIndex) {
 
   // Check HTTP status code and stop execution if request fails
   if (response.status !== 200) {
-    console.log(`❌ RESTORE API ERROR - RESTORE PERFORMANCE`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: restore-performance API returned status ${
+        response.status
+      } for userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
     );
-    console.log(`📡 Endpoint: restore-performance`);
-    console.log(`📊 Status Code: ${response.status}`);
-    console.log(`📄 Response Body: ${response.body}`);
-    console.log(`🛑 Stopping entire test execution due to API error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Response body: ${response.body}`);
+    console.log(`Stopping entire test execution due to API error.`);
     abort();
   }
 
@@ -317,17 +296,13 @@ function restorePerformance(baseUrl, header, userIndex) {
   try {
     bodyResponse = response.json();
   } catch (error) {
-    console.log(`❌ JSON PARSING ERROR - RESTORE PERFORMANCE`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Failed to parse JSON response from restore-performance API for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(
-      `📡 Operation: Parse JSON response from restore-performance API`
-    );
-    console.log(`❌ Error: ${error.message}`);
-    console.log(`📄 Response Body: ${response.body}`);
-    console.log(`🛑 Stopping entire test execution due to JSON parsing error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Response body: ${response.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
     abort();
   }
 
@@ -338,18 +313,15 @@ function restorePerformance(baseUrl, header, userIndex) {
 
   if (!status) {
     const bodyString = JSON.stringify(bodyResponse);
-    console.log(`❌ VALIDATION ERROR - RESTORE PERFORMANCE`);
     console.log(
-      `🔍 User Info: userIndex ${userIndex} (VU ${__VU}, User ${userIndex + 1})`
+      `❌ ERROR: Validation failed for restore-performance API for userIndex ${userIndex} (VU ${__VU}, User ${
+        userIndex + 1
+      })`
     );
-    console.log(`📡 Operation: Validate restore-performance API response`);
-    console.log(`❌ Issue: Restore validation failed`);
     console.log(
-      `📋 Details: pm form id ${pmFormId[userIndex]} step number ${stepNumbers[userIndex]}`
+      `restore-performance, pm form id ${pmFormId[userIndex]} step number ${stepNumbers[userIndex]}: ${bodyString}`
     );
-    console.log(`📄 Response Data: ${bodyString}`);
-    console.log(`🛑 Stopping entire test execution due to validation error.`);
-    console.log("=".repeat(80) + "\n");
+    console.log(`Stopping entire test execution due to validation error.`);
     abort();
   }
 

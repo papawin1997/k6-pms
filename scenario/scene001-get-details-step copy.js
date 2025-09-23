@@ -61,6 +61,7 @@ export default function () {
   const pmFormID = pmFormId[userIndex]["form_id"];
   const urls = [
     `${baseUrl}/performance/pending/${pmFormID}/global-value?languageID=1`,
+    `${baseUrl}/performance/pending/${pmFormID}/kpi-categories?languageID=1&isViewer=0&assessorRole=Employee`,
     `${baseUrl}/performance/pending/${pmFormID}/pm-form-step?assessorRole=Employee`,
     `${baseUrl}/performance/pending/${pmFormID}/employee`,
     `${baseUrl}/performance/pending/pm-form-header/${pmFormID}?languageID=1`,
@@ -71,18 +72,18 @@ export default function () {
   headerAdmin["x-client-proxy-id"] = userID;
   const params = {
     headers: headerAdmin,
-    timeout: "300s",
   };
 
   // Load Test
   const batchRequests = urls.map((url) => ["GET", url, null, params]);
   const responses = http.batch(batchRequests);
-  const [res1, res3, res4, res5, res6] = responses;
+  const [res1, res2, res3, res4, res5, res6] = responses;
 
   // Check HTTP status codes and stop execution if any request fails
-  const responses_to_check = [res1, res3, res4, res5, res6];
+  const responses_to_check = [res1, res2, res3, res4, res5, res6];
   const endpoint_names = [
     "global-value",
+    "kpi-categories",
     "pm-form-step",
     "employee",
     "pm-form-header",
@@ -128,33 +129,33 @@ export default function () {
     abort();
   }
 
-  // let body2;
-  // try {
-  //   body2 = res2.json();
-  // } catch (error) {
-  //   console.log(
-  //     `❌ ERROR: Failed to parse JSON response from kpi-categories API for userIndex ${userIndex}`
-  //   );
-  //   console.log(`Response body: ${res2.body}`);
-  //   console.log(`Stopping entire test execution due to JSON parsing error.`);
-  //   abort();
-  // }
+  let body2;
+  try {
+    body2 = res2.json();
+  } catch (error) {
+    console.log(
+      `❌ ERROR: Failed to parse JSON response from kpi-categories API for userIndex ${userIndex}`
+    );
+    console.log(`Response body: ${res2.body}`);
+    console.log(`Stopping entire test execution due to JSON parsing error.`);
+    abort();
+  }
 
-  // let kpiList = body2[0].kpi;
-  // let kpiItem = kpiList.length;
-  // const status2 = check(res2, {
-  //   "[GET kpi-categories] status is 200": (r) => r.status === 200,
-  //   "[GET kpi-categories] response is an array": () => Array.isArray(body2),
-  //   "[GET kpi-categories] kpi list has items": () => kpiItem > 0,
-  // });
+  let kpiList = body2[0].kpi;
+  let kpiItem = kpiList.length;
+  const status2 = check(res2, {
+    "[GET kpi-categories] status is 200": (r) => r.status === 200,
+    "[GET kpi-categories] response is an array": () => Array.isArray(body2),
+    "[GET kpi-categories] kpi list has items": () => kpiItem > 0,
+  });
 
-  // if (!status2) {
-  //   console.log(
-  //     `❌ ERROR: Validation failed for kpi-categories API for userIndex ${userIndex}`
-  //   );
-  //   console.log(`Stopping entire test execution due to validation error.`);
-  //   abort();
-  // }
+  if (!status2) {
+    console.log(
+      `❌ ERROR: Validation failed for kpi-categories API for userIndex ${userIndex}`
+    );
+    console.log(`Stopping entire test execution due to validation error.`);
+    abort();
+  }
 
   let body3;
   try {
@@ -283,12 +284,4 @@ export default function () {
     "[GET routemap] step7 has name": (r) =>
       r.json()[6].stepName === "Completed",
   });
-
-  if (!status6) {
-    console.log(
-      `❌ ERROR: Validation failed for pm-form-header API for userIndex ${userIndex}`
-    );
-    console.log(`Stopping entire test execution due to validation error.`);
-    abort();
-  }
 }
